@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FactsCheckBot</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:white;
+    font-family:Arial;
+}
+
+/* CENTER */
+.container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+}
+
+/* HEADING */
+h1{
+    font-size:36px;
+    font-weight:900;
+    margin-bottom:30px;
+}
+
+/* INPUT */
+textarea{
+    width:420px;
+    height:120px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#111;
+    color:white;
+    font-size:16px;
+}
+
+/* BUTTON */
+button{
+    margin-top:20px;
+    width:420px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#7b2ff7;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+/* OUTPUT */
+.box{
+    margin-top:20px;
+    width:420px;
+    background:#111;
+    padding:12px;
+    border-radius:10px;
+}
+
+.title{
+    margin-top:25px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>FACTSCHECKBOT</h1>
+
+<textarea id="inputText" placeholder="Enter your claim..."></textarea>
+
+<button onclick="checkFact()">Verify</button>
+
+<div class="title">✔ Is it Fact or Fake?</div>
+<div class="box" id="result"></div>
+
+<div class="title">📖 Why?</div>
+<div class="box" id="explanation"></div>
+
+</div>
+
+<script>
+async function checkFact(){
+let text=document.getElementById("inputText").value;
+
+document.getElementById("result").innerText="...";
+document.getElementById("explanation").innerText="...";
+
+try{
+let res=await fetch("/check",{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:"news=" + encodeURIComponent(text)
+});
+
+let data=await res.json();
+
+document.getElementById("result").innerText=data.result;
+document.getElementById("explanation").innerText=data.explanation;
+
+}catch{
+document.getElementById("result").innerText="Error";
+document.getElementById("explanation").innerText="Backend not connected";
+}
+}
+</script>
+
+</body>
+</html>
